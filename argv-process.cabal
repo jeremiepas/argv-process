@@ -1,0 +1,70 @@
+cabal-version:      3.0
+name:               argv-process
+-- Package Versioning Policy (https://pvp.haskell.org): A.B.C.D. A.B changes when the API breaks,
+-- C when something is added, D for a fix. The released version equals the tag without its `v`.
+version:            0.1.0.0
+synopsis:           Run a program from an argument vector, never through a shell, with a time limit and no orphan process
+description:
+  Run a program from an argument vector, never through a shell, with a time limit and no orphan process.
+  .
+  Each element of the argument vector reaches the program as one argument, whatever characters it holds.
+  Both outputs are captured without blocking, and a text can be given on the standard input. The program
+  runs in a process group of its own, terminated with everything it started when the time limit passes,
+  when the caller is interrupted by an exception, or when the caller dies, even by @SIGKILL@: a watchdog
+  process looks after that last case. POSIX systems only.
+  .
+  See the README at <https://github.com/jeremiepas/argv-process#readme> for an introduction.
+homepage:           https://github.com/jeremiepas/argv-process
+bug-reports:        https://github.com/jeremiepas/argv-process/issues
+license:            MIT
+license-file:       LICENSE
+author:             jeremie de pas
+maintainer:         jeremiepas@users.noreply.github.com
+copyright:          2026 jeremie de pas
+category:           System
+build-type:         Simple
+tested-with:        GHC ==9.8.4 || ==9.10.3 || ==9.12.2
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+source-repository head
+  type:     git
+  location: https://github.com/jeremiepas/argv-process.git
+
+common shared
+  default-language:   GHC2021
+  default-extensions: DerivingStrategies
+                      LambdaCase
+                      OverloadedStrings
+  ghc-options:        -Wall -Wcompat -Wincomplete-uni-patterns -Wincomplete-record-updates
+                      -Wredundant-constraints -Wmissing-export-lists
+
+library
+  import:           shared
+  hs-source-dirs:   src
+  exposed-modules:  System.Process.Argv
+                    System.Process.Argv.Group
+  other-modules:    System.Process.Argv.Wait
+  build-depends:    base >=4.19 && <5
+                  , bytestring >=0.11 && <0.13
+                  , process >=1.6.13 && <1.7
+                  , text >=2.0 && <2.2
+                  , unix >=2.7 && <2.9
+
+test-suite spec
+  import:           shared
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  other-modules:    Helpers
+                    System.Process.Argv.GroupSpec
+                    System.Process.ArgvSpec
+  ghc-options:      -threaded
+  build-depends:    base >=4.19 && <5
+                  , argv-process
+                  , directory >=1.3 && <1.4
+                  , filepath >=1.4 && <1.6
+                  , hspec >=2.10 && <3
+                  , process >=1.6.13 && <1.7
+                  , text >=2.0 && <2.2
+                  , unix >=2.7 && <2.9
