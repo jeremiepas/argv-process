@@ -6,6 +6,8 @@ breaks, `C` when something is added and `D` for a fix.
 
 ## Unreleased
 
+## 0.1.0.0 — 2026-11-25
+
 - First version, extracted from application code:
   `run` and `runWith` in `System.Process.Argv` (argument vector, captured outputs, optional standard
   input, time limit), and `System.Process.Argv.Group` (terminating a process group, and the watchdog
